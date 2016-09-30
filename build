@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -eu
+
+export CARGO_HOME=/tmp/cargo
+
+(cd rust; cargo build --release --verbose)
+if ldd rust/target/x86_64-unknown-linux-musl/release/librust_example.a; then
+  echo 'Executable is not static!' 1>&2
+  echo 'FAIL.' 1>&2
+  exit 1
+fi
+cp rust/target/x86_64-unknown-linux-musl/release/librust_example*.a target/

@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -eu
+
+cmd="$1"
+case $cmd in
+build)
+  rm -rf ./target
+  mkdir ./target
+  (cd ruby/ext/rust_example; rm -f Makefile librust_example* rust_example.o rust_example.so)
+
+  docker run \
+    --volume "$(pwd)":"/mnt/project" \
+    --volume "$(pwd)/tmp":"/tmp/cargo" \
+    --interactive \
+    --tty \
+    --rm \
+    -w /mnt/project \
+    clux/muslrust:1.13.0-nightly-2016-09-22 \
+    ./build
+
+  # Use image with development tools installed
+  docker build -f Dockerfile.alpine+ruby -t tombruijn/ruby-2.3.1-alpine .
+
+  docker run \
+    --volume "$(pwd)":"/mnt/project" \
+    --interactive \
+    --tty \
+    --rm \
+    -w /mnt/project \
+    tombruijn/ruby-2.3.1-alpine \
+    ./install
+  ;;
+clean)
+  rm -rf ./tmp ./rust/target ./target
+  (cd ruby/ext/rust_example; rm -f Makefile librust_example* rust_example.o rust_example.so)
+  ;;
+*)
+  echo "Usage"
+  echo
+  echo "  ./run build      Run build on Ubuntu 16 with musl and install in Ruby gem on Alpine"
+  echo "  ./run clean      Clean up all output from builds along with caches"
+  ;;
+esac
