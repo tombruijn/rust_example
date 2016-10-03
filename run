@@ -4,6 +4,34 @@ set -eu
 
 cmd="${1-}"
 case $cmd in
+build:debian)
+  rm -rf ./target
+  mkdir ./target
+  (cd ruby/ext/rust_example; rm -f Makefile librust_example* rust_example.o rust_example.so)
+
+  docker build -f Dockerfile.debian+rust -t tombruijn/rust-build .
+  docker run \
+    --volume "$(pwd)":"/mnt/project" \
+    --volume "$(pwd)/tmp":"/tmp/cargo" \
+    --interactive \
+    --tty \
+    --rm \
+    -w /mnt/project \
+    tombruijn/rust-build \
+    ./build_debian
+
+  # Use image with development tools installed
+  docker build -f Dockerfile.debian+ruby -t tombruijn/ruby-2.3.1 .
+
+  docker run \
+    --volume "$(pwd)":"/mnt/project" \
+    --interactive \
+    --tty \
+    --rm \
+    -w /mnt/project \
+    tombruijn/ruby-2.3.1 \
+    /bin/bash ./install
+  ;;
 build)
   rm -rf ./target
   mkdir ./target
