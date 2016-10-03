@@ -1,4 +1,4 @@
-#![feature(lang_items)]
+extern crate libc;
 
 #[no_mangle]
 pub extern "C" fn hello_rust() -> *const u8 {
