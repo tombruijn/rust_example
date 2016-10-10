@@ -1,3 +1,4 @@
+#include "dlfcn.h"
 #include<stdio.h>
 #include<ruby.h>
 
@@ -12,7 +13,11 @@ VALUE hello(void) {
 
 // https://github.com/ruby/ruby/blob/trunk/README.EXT#L682
 void Init_rust_example(void) {
-    VALUE rust_example = rb_define_module("RustExample");
+    VALUE rust_example;
+
+    dlopen("/mnt/project/ruby/ext/rust_example/librustimpl.so", RTLD_NOW | RTLD_LOCAL);
+
+    rust_example = rb_define_module("RustExample");
 
     rb_define_singleton_method(rust_example, "hello", hello, 0);
 }

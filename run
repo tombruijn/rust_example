@@ -7,7 +7,7 @@ case $cmd in
 build)
   rm -rf ./target
   mkdir ./target
-  (cd ruby/ext/rust_example; rm -f Makefile librust_example* rust_example.o rust_example.so)
+  (cd ruby/ext/rust_example; rm -f Makefile librustimpl* rust_example.o rust_example.so)
 
   docker run \
     --volume "$(pwd)":"/mnt/project" \
@@ -33,7 +33,7 @@ build)
   ;;
 clean)
   rm -rf ./tmp ./rust/target ./target
-  (cd ruby/ext/rust_example; rm -f Makefile librust_example* rust_example.o rust_example.so)
+  (cd ruby/ext/rust_example; rm -f Makefile librustimpl* rust_example.o rust_example.so)
   ;;
 *)
   echo "Usage"

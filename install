@@ -2,14 +2,14 @@
 
 set -eu
 
-cp target/librust_example.a ruby/ext/rust_example/librust_example.a
+cp target/librustimpl.so ruby/ext/rust_example/librustimpl.so
 (
   cd ruby/ext/rust_example;
-  echo "ruby extconf.rb";
+  echo "$ ruby extconf.rb";
   ruby extconf.rb;
-  echo "make clean";
+  echo "$ make clean";
   make clean;
-  echo "make";
+  echo "$ make";
   make
 )
 echo

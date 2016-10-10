@@ -5,9 +5,14 @@ set -eu
 export CARGO_HOME=/tmp/cargo
 
 (cd rust; cargo build --release --verbose)
-if ldd rust/target/x86_64-unknown-linux-musl/release/librust_example.a; then
+if ldd rust/target/x86_64-unknown-linux-musl/release/librustimpl.a; then
   echo 'Executable is not static!' 1>&2
   echo 'FAIL.' 1>&2
   exit 1
 fi
-cp rust/target/x86_64-unknown-linux-musl/release/librust_example*.a target/
+cp rust/target/x86_64-unknown-linux-musl/release/librustimpl*.a target/
+(
+  cd target/
+  echo "librustimpl.a" | xargs -n 1 ar x
+  musl-gcc --shared -Wall -o librustimpl.so *.o -lrt -ldl -lpthread -lgcc_s -lc -lm
+)
