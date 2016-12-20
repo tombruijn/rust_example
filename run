@@ -16,7 +16,7 @@ build)
     --tty \
     --rm \
     -w /mnt/project \
-    clux/muslrust:1.13.0-nightly-2016-09-22 \
+    clux/muslrust:1.15.0-nightly-2016-12-18 \
     ./build
 
   # Use image with development tools installed
