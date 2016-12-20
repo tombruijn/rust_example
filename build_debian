@@ -3,6 +3,7 @@
 set -eu
 
 export CARGO_HOME=/tmp/cargo
+export RUSTFLAGS='-C target-feature=-crt-static -Z unstable-options'
 
 (cd rust; cargo build --release --verbose)
 if ldd rust/target/x86_64-unknown-linux-gnu/release/librust_example.a; then
